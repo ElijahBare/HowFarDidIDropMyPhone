@@ -128,7 +128,6 @@
     }
 
     function startTimer() {
-      started = true;
       startCountdown();
       output_message.innerHTML = "WAITING...";
 
@@ -149,6 +148,7 @@
         } else {
           clearInterval(countdownInterval);
           countdownDisplay.textContent = "DROP";
+          started = true;
         }
       }, 1000);
     }
