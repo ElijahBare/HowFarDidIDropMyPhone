@@ -123,7 +123,7 @@ h1 {
           clearTimeout(timer);
           timer = setTimeout(function() {
             output_message.innerHTML = "SHAKEN!";
-          }, 500);
+          }, 300);
 
           if (!startTime) {
             startTime = Date.now();
@@ -160,9 +160,9 @@ h1 {
         if (countdown >= 1) {
           countdownDisplay.textContent = countdown;
         } else {
-          clearInterval(countdownInterval);
           countdownDisplay.textContent = "DROP";
           started = true;
+          clearInterval(countdownInterval);
         }
       }, 1000);
     }
