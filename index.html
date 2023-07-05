@@ -73,6 +73,16 @@ h1 {
     var distance = 0;
 
     var started = false;
+    var hitGround = false;
+
+    setInterval(() => {    
+      if (hitGround == false && started == true) {
+        document.body.style.backgroundColor = "green";
+      }
+      else{
+        document.body.style.backgroundColor = "#2B2B2B";
+      }
+    }, 10);
 
     btn_reqPermission.addEventListener("click", function() {
       checkMotionPermission();
@@ -107,36 +117,33 @@ h1 {
       window.addEventListener('devicemotion', function(event) {
         console.log('Device motion event:', event);
 
-        if (!started){
+        if (started == false){
           return;
         }
 
-        if(output_message.innerHTML == "SHAKEN!"){
+        if(hitGround == true){
             return;
         }
         
         if (
-          event.rotationRate.alpha > 50 ||
-          event.rotationRate.beta > 50 ||
-          event.rotationRate.gamma > 50
+          event.rotationRate.alpha > 200 ||
+          event.rotationRate.beta > 200 ||
+          event.rotationRate.gamma > 200
         ) {
-          clearTimeout(timer);
-          timer = setTimeout(function() {
-            output_message.innerHTML = "SHAKEN!";
-          }, 300);
+          // clearTimeout(timer);
+          // timer = setTimeout(function() {
+          output_message.innerHTML = "COLLIDED!";
+          // }, 300);          
 
-          if (!startTime) {
-            startTime = Date.now();
-          } else {
-
-            var currentTime = Date.now();
-            var elapsedTime = (currentTime - startTime) / 1000;
-            var accelerationDueToGravity = 9.8;
-            distance = 0.5 * accelerationDueToGravity * Math.pow(elapsedTime, 2);
-            console.log('Distance fallen:', distance);
-            distanceDisplay.textContent = distance.toFixed(2) + " meters";
-            return;
-          }
+          var currentTime = Date.now();
+          var elapsedTime = (currentTime - startTime) / 1000;
+          var accelerationDueToGravity = 9.81;
+          distance = 0.5 * accelerationDueToGravity * Math.pow(elapsedTime, 2);
+          console.log('Distance fallen:', distance);
+          distanceDisplay.textContent = distance.toFixed(2) + " meters";
+          hitGround = true;
+          started = false;
+        
         }
       });
     }
@@ -146,13 +153,14 @@ h1 {
       output_message.innerHTML = "WAITING...";
 
       startTime = null;
+      hitGround = false;
       distance = 0;
       countdownDisplay.textContent = "";
       distanceDisplay.textContent = "0";
     }
 
     function startCountdown() {
-      var countdown = 3;
+      var countdown = 4;
       countdownDisplay.textContent = countdown;
 
       var countdownInterval = setInterval(function() {
@@ -161,6 +169,7 @@ h1 {
           countdownDisplay.textContent = countdown;
         } else {
           countdownDisplay.textContent = "DROP";
+          startTime = Date.now();
           started = true;
           clearInterval(countdownInterval);
         }
